@@ -1,15 +1,8 @@
-# Your startup name here
+# Campus Connect
 
 [My Notes](notes.md)
 
-A brief description of the application here. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-
-> [!NOTE]
->  This is a template for your startup application. You must modify this `README.md` file for each phase of your development. You only need to fill in the section for each deliverable when that deliverable is submitted in Canvas. Without completing the section for a deliverable, the TA will not know what to look for when grading your submission. Feel free to add additional information to each deliverable description, but make sure you at least have the list of rubric items and a description of what you did for each item.
-
-> [!NOTE]
->  If you are not familiar with Markdown then you should review the [documentation](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) before continuing.
+Campus Connect is an online platform with the goal of connecting students to their campus. It is an online forum where people can post announce activites, make connections, chat about what's going on in their community, and more.
 
 ## 🚀 Specification Deliverable
 
@@ -18,15 +11,15 @@ A brief description of the application here. Lorem ipsum dolor sit amet, consect
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] Proper use of Markdown
-- [ ] A concise and compelling elevator pitch
-- [ ] Description of key features
-- [ ] Description of how you will use each technology
+- [x] Proper use of Markdown
+- [x] A concise and compelling elevator pitch
+- [x] Description of key features
+- [x] Description of how you will use each technology
 - [ ] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
 
 ### Elevator pitch
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Have you ever felt lost within a crowd in a new city or campus? Campus Connect will fix that. Within minitues you'll be able to discover new activies, find new friends, and feel more connected with your campus and your community. From sports to arts, clubs, groups, and beyond, this is a game changer for all things college life.
 
 ### Design
 
@@ -43,20 +36,30 @@ sequenceDiagram
 
 ### Key features
 
-- Describe your key feature
-- Describe your key feature
-- Describe your key feature
+- Secure login over HTTPS
+- Select campus to see sepecific Campus Connect Board
+- Post a topic of discussion
+- Vote on discussion topics
+- Vote counts update in real time
+- Comment on discussion topics
+- Admin can delete posts to maintain community standards
+
 
 ### Technologies
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** - Description here
-- **CSS** - Description here
-- **React** - Description here
-- **Service** - Description here
-- **DB/Login** - Description here
-- **WebSocket** - Description here
+- **HTML** - Use correct HTML structure for application. Sign Up and Login pages, Campus Connect Board page, view post page.
+- **CSS** - Unique and creative coloring, good styling that looks good on any size screen. Simple layout.
+- **React** - Provides login, Campus Connect Board view, handles user votes and comments, handles routing and reusable components.
+- **Service** - Backend service with endpoints for:
+    - login
+    - retrieving posts
+    - submitting post
+    - submitting comment
+    - submitting vote
+- **DB/Login** - Store users, posts, and comments in database. Register and login users. Credentials stored securely in database. Can't post, comment, or vote unless authenticated.
+- **WebSocket** - As posts, comments, or votes are submitted, they are broadcast to all other users.
 
 ## 🚀 AWS deliverable
 
