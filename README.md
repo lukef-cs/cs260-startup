@@ -1,13 +1,13 @@
 # Campus Connect
 
-[My Notes](notes.md)
+<!-- [My Notes](notes.md) -->
 
 Campus Connect is an online platform with the goal of connecting students to their campus. It is an online forum where people can post announce activites, make connections, chat about what's going on in their community, and more.
 
 ## 🚀 Specification Deliverable
 
-> [!NOTE]
->  Fill in this sections as the submission artifact for this deliverable. You can refer to this [example](https://github.com/webprogramming260/startup-example/blob/main/README.md) for inspiration.
+<!-- > [!NOTE]
+>  Fill in this sections as the submission artifact for this deliverable. You can refer to this [example](https://github.com/webprogramming260/startup-example/blob/main/README.md) for inspiration. -->
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
