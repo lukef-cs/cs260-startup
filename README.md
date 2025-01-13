@@ -52,6 +52,7 @@ I am going to use the required technologies in the following ways.
     - submitting vote
 - **DB/Login** - Store users, posts, and comments in database. Register and login users. Credentials stored securely in database. Can't post, comment, or vote unless authenticated.
 - **WebSocket** - As posts, comments, or votes are submitted, they are broadcast to all other users.
+- **API** - Query 'CollegeFootballData.com' to get the data of the football team of the users selected college.
 
 ## 🚀 AWS deliverable
 
