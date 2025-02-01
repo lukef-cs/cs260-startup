@@ -78,12 +78,12 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **Header, footer, and main content body**
-- [x] **Navigation elements**
-- [x] **Responsive to window resizing**
-- [x] **Application elements**
-- [x] **Application text content**
-- [x] **Application images**
+- [x] **Header, footer, and main content body** - I created a consistent header and footer for all pages, ensuring they contain navigation links and branding.
+- [x] **Navigation elements** - The navigation bar includes links to all major sections of the application, such as Home, About, Features, and Contact. It is implemented using a `<nav>` element and styled to be visually appealing and user-friendly.
+- [x] **Responsive to window resizing** - I used CSS media queries to ensure the layout adapts to different screen sizes. The design is mobile-first, ensuring it looks good on both small and large screens.
+- [x] **Application elements** - All interactive elements, such as buttons, forms, and links, are styled consistently. I used CSS classes to ensure a uniform look and feel across the application.
+- [x] **Application text content** - The text content is clear, concise, and informative. I used appropriate HTML elements like `<h1>`, `<p>`, and `<ul>` to structure the content logically.
+- [x] **Application images** - Images are optimized for web use and included using `<img>` tags with descriptive `alt` attributes for accessibility. They are styled to be responsive and fit within the layout without breaking the design.
 
 ## 🚀 React part 1: Routing deliverable
 
