@@ -1,1 +1,13 @@
 production.pem
+node_modules
+.DS_Store
+.vscode
+*.code-workspace
+*.sublime-workspace
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+.gitignore
