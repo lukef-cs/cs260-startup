@@ -89,9 +89,9 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Bundled using Vite** - I did not complete this part of the deliverable.
-- [ ] **Components** - I did not complete this part of the deliverable.
-- [ ] **Router** - Routing between login and voting components.
+- [x] **Bundled using Vite** - I used Vite to bundle the application, ensuring fast and efficient development and build processes.
+- [x] **Components** - I created reusable React components for the login form, voting interface, and discussion board. Each component is modular and can be easily maintained and updated.
+- [x] **Router** - I implemented routing using React Router to navigate between the login page and the voting components. This ensures a smooth user experience as they move through different parts of the application.
 
 ## 🚀 React part 2: Reactivity
 
