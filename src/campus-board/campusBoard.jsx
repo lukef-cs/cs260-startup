@@ -37,7 +37,7 @@ export function CampusBoard() {
             </div>
             <div className="card-body text-center">
                 <img
-                src="public/byu.png"
+                src="/byu.png"
                 alt="BYU Logo"
                 className="img-fluid mb-3"
                 style={{ maxWidth: '150px' }}
