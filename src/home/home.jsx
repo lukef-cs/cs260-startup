@@ -4,27 +4,55 @@ import { useNavigate } from 'react-router-dom';
 export function Home() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Create a simple user object
-    const user = {
-      email: email,
-      authenticated: true,
-      loginTime: new Date().toISOString()
-    };
+    if (isLogin) {
+      // Login logic
+      const user = {
+        email: email,
+        authenticated: true,
+        loginTime: new Date().toISOString()
+      };
 
-    // Store user in localStorage
-    localStorage.setItem('currentUser', JSON.stringify(user));
+      localStorage.setItem('currentUser', JSON.stringify(user));
+    } else {
+      // Sign up logic
+      const newUser = {
+        name: name,
+        email: email,
+        authenticated: true,
+        registerTime: new Date().toISOString(),
+        loginTime: new Date().toISOString()
+      };
+
+      // Store new user in localStorage
+      localStorage.setItem('currentUser', JSON.stringify(newUser));
+
+      // Add user to users list
+      const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+      localStorage.setItem('users', JSON.stringify([...existingUsers, newUser]));
+    }
 
     // Clear form
     setEmail('');
     setPassword('');
+    setName('');
 
-    // Redirect to campus board (or wherever you want after login)
+    // Redirect to campus board
     navigate('/campus-board');
+  };
+
+  const toggleAuthMode = () => {
+    setIsLogin(!isLogin);
+    // Clear fields when switching modes
+    setEmail('');
+    setPassword('');
+    setName('');
   };
 
   return (
@@ -38,11 +66,25 @@ export function Home() {
               <p className="lead">Stay connected with your campus community. Share updates, events, and more!</p>
             </div>
             <div className="col-md-6 align-items-center justify-content-center">
-              {/* <!-- Login Card --> */}
+              {/* <!-- Auth Card --> */}
               <div className="card shadow">
                 <div className="card-body p-4">
-                  <h2 className="card-title h4 mb-4">Sign In</h2>
+                  <h2 className="card-title h4 mb-4">{isLogin ? 'Sign In' : 'Sign Up'}</h2>
                   <form onSubmit={handleSubmit}>
+                    {!isLogin && (
+                      <div className="mb-3">
+                        <label htmlFor="name" className="form-label">Full Name</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="name"
+                          placeholder="John Doe"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          required={!isLogin}
+                        />
+                      </div>
+                    )}
                     <div className="mb-3">
                       <label htmlFor="email" className="form-label">Email</label>
                       <input
@@ -66,7 +108,18 @@ export function Home() {
                         required
                       />
                     </div>
-                    <button type="submit" className="btn btn-primary w-100">Sign In</button>
+                    <button type="submit" className="btn btn-primary w-100">
+                      {isLogin ? 'Sign In' : 'Create Account'}
+                    </button>
+                    <div className="text-center mt-3">
+                      <button
+                        type="button"
+                        className="btn btn-link"
+                        onClick={toggleAuthMode}
+                      >
+                        {isLogin ? 'Need an account? Sign up' : 'Already have an account? Sign in'}
+                      </button>
+                    </div>
                   </form>
                 </div>
               </div>
