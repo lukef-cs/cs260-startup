@@ -1,6 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export function Home() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Create a simple user object
+    const user = {
+      email: email,
+      authenticated: true,
+      loginTime: new Date().toISOString()
+    };
+
+    // Store user in localStorage
+    localStorage.setItem('currentUser', JSON.stringify(user));
+
+    // Clear form
+    setEmail('');
+    setPassword('');
+
+    // Redirect to campus board (or wherever you want after login)
+    navigate('/campus-board');
+  };
+
   return (
     <main className='container-fluid bg-body text-center'>
       {/* <!-- Hero Section --> */}
@@ -16,14 +42,29 @@ export function Home() {
               <div className="card shadow">
                 <div className="card-body p-4">
                   <h2 className="card-title h4 mb-4">Sign In</h2>
-                  <form method="get" action="play.html">
+                  <form onSubmit={handleSubmit}>
                     <div className="mb-3">
-                      <label for="email" className="form-label">Email</label>
-                      <input type="email" className="form-control" id="email" placeholder="your@email.com" required />
+                      <label htmlFor="email" className="form-label">Email</label>
+                      <input
+                        type="email"
+                        className="form-control"
+                        id="email"
+                        placeholder="your@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                      />
                     </div>
                     <div className="mb-3">
-                      <label for="password" className="form-label">Password</label>
-                      <input type="password" className="form-control" id="password" required />
+                      <label htmlFor="password" className="form-label">Password</label>
+                      <input
+                        type="password"
+                        className="form-control"
+                        id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                      />
                     </div>
                     <button type="submit" className="btn btn-primary w-100">Sign In</button>
                   </form>
