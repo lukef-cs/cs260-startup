@@ -97,8 +97,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **All functionality implemented or mocked out** - I did not complete this part of the deliverable.
-- [ ] **Hooks** - I did not complete this part of the deliverable.
+- [x] **All functionality implemented or mocked out** - I implemented core functionality including post creation, comment display, and voting mechanisms. The application now allows users to view posts, add comments, and interact with content through voting features.
+- [x] **Hooks** - I used React hooks extensively throughout the application. I implemented useState for maintaining component state for posts and user interactions, useEffect for fetching post data and handling side effects, and useContext to manage global application state across components.
 
 ## 🚀 Service deliverable
 
