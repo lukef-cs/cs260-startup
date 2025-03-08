@@ -4,34 +4,44 @@ import { useNavigate } from 'react-router-dom';
 export function MakePost() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setError('');
 
-    // Create a new post object
-    const newPost = {
-      id: Date.now(), // Use timestamp as a simple unique ID
-      title: title,
-      content: content,
-      date: 'Just now', // You could format this better with a date library
-    };
+    try {
+      const response = await fetch('/api/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: title,
+          content: content,
+        }),
+        credentials: 'include', // Important: Include cookies for auth
+      });
 
-    // Get existing posts from localStorage or initialize empty array
-    const existingPosts = JSON.parse(localStorage.getItem('campusPosts') || '[]');
+      if (!response.ok) {
+        throw new Error('Failed to create post');
+      }
 
-    // Add new post to the beginning of the array (newest first)
-    const updatedPosts = [newPost, ...existingPosts];
+      // Clear form fields
+      setTitle('');
+      setContent('');
 
-    // Save updated posts back to localStorage
-    localStorage.setItem('campusPosts', JSON.stringify(updatedPosts));
-
-    // Clear form fields
-    setTitle('');
-    setContent('');
-
-    // Redirect to campus board page
-    navigate('/campus-board');
+      // Redirect to campus board page
+      navigate('/campus-board');
+    } catch (error) {
+      console.error('Error creating post:', error);
+      setError('Failed to create post. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -41,6 +51,11 @@ export function MakePost() {
           <h1 className="text-center mb-4">Make a Post</h1>
           <div className="card">
             <div className="card-body">
+              {error && (
+                <div className="alert alert-danger" role="alert">
+                  {error}
+                </div>
+              )}
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label htmlFor="postTitle" className="form-label">
@@ -54,6 +69,7 @@ export function MakePost() {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
                 <div className="mb-3">
@@ -68,10 +84,17 @@ export function MakePost() {
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     required
+                    disabled={isSubmitting}
                   ></textarea>
                 </div>
                 <div className="text-center">
-                  <button type="submit" className="btn btn-primary">Create Post</button>
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'Creating...' : 'Create Post'}
+                  </button>
                 </div>
               </form>
             </div>
