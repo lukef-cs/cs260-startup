@@ -6,53 +6,66 @@ export function Home() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [isLogin, setIsLogin] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage('');
 
-    if (isLogin) {
-      // Login logic
-      const user = {
-        email: email,
-        authenticated: true,
-        loginTime: new Date().toISOString()
-      };
+    try {
+      let response;
 
-      localStorage.setItem('currentUser', JSON.stringify(user));
-    } else {
-      // Sign up logic
-      const newUser = {
-        name: name,
-        email: email,
-        authenticated: true,
-        registerTime: new Date().toISOString(),
-        loginTime: new Date().toISOString()
-      };
+      if (isLogin) {
+        // Login logic - call the login API endpoint
+        response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+      } else {
+        // Sign up logic - call the create account API endpoint
+        response = await fetch('/api/auth/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+      }
 
-      // Store new user in localStorage
-      localStorage.setItem('currentUser', JSON.stringify(newUser));
+      if (!response.ok) {
+        const result = await response.json();
+        throw new Error(result.msg || 'Authentication failed');
+      }
 
-      // Add user to users list
-      const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
-      localStorage.setItem('users', JSON.stringify([...existingUsers, newUser]));
+      const user = await response.json();
+
+      // Store user email in localStorage for UI purposes
+      localStorage.setItem('userEmail', user.email);
+
+      // Clear form
+      setEmail('');
+      setPassword('');
+      setName('');
+
+      // Redirect to campus board
+      navigate('/campus-board');
+    } catch (error) {
+      console.error('Authentication error:', error);
+      setErrorMessage(error.message);
     }
-
-    // Clear form
-    setEmail('');
-    setPassword('');
-    setName('');
-
-    // Redirect to campus board
-    navigate('/campus-board');
   };
 
   const toggleAuthMode = () => {
     setIsLogin(!isLogin);
-    // Clear fields when switching modes
+    // Clear fields and errors when switching modes
     setEmail('');
     setPassword('');
     setName('');
+    setErrorMessage('');
   };
 
   return (
@@ -70,6 +83,13 @@ export function Home() {
               <div className="card shadow">
                 <div className="card-body p-4">
                   <h2 className="card-title h4 mb-4">{isLogin ? 'Sign In' : 'Sign Up'}</h2>
+
+                  {errorMessage && (
+                    <div className="alert alert-danger" role="alert">
+                      {errorMessage}
+                    </div>
+                  )}
+
                   <form onSubmit={handleSubmit}>
                     {!isLogin && (
                       <div className="mb-3">
