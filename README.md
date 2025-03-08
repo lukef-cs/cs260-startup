@@ -104,11 +104,15 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Node.js/Express HTTP service** - I did not complete this part of the deliverable.
-- [ ] **Static middleware for frontend** - I did not complete this part of the deliverable.
-- [ ] **Calls to third party endpoints** - I did not complete this part of the deliverable.
-- [ ] **Backend service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
+## 🚀 Service deliverable
+
+For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
+
+- [x] **Node.js/Express HTTP service** - I created a backend service using Node.js and Express to handle API requests. The service manages post data, user interactions, and authentication processes.
+- [x] **Static middleware for frontend** - I implemented Express static middleware to serve the React frontend, allowing for seamless integration between the frontend and backend components.
+- [x] **Calls to third party endpoints** - The application makes calls to CollegeFootballData.com API to fetch information about the football team of the user's selected college, providing additional contextual information.
+- [x] **Backend service endpoints** - I created endpoints for user authentication, post management (create, read), comment submission, and vote handling, enabling the frontend to interact with the database.
+- [x] **Frontend calls service endpoints** - The React frontend makes fetch requests to the backend services, allowing users to retrieve posts, submit new content, add comments, and cast votes in real-time.
 
 ## 🚀 DB/Login deliverable
 
