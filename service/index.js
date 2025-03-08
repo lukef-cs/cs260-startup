@@ -2,6 +2,7 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const express = require('express');
 const uuid = require('uuid');
+const path = require('path');
 const app = express();
 
 const authCookieName = 'token';
@@ -18,9 +19,6 @@ app.use(express.json());
 
 // Use the cookie parser middleware for tracking authentication tokens
 app.use(cookieParser());
-
-// Serve up the front-end static content hosting
-app.use(express.static('public'));
 
 // Router for service endpoints
 var apiRouter = express.Router();
@@ -86,7 +84,7 @@ apiRouter.post('/posts', verifyAuth, async (req, res) => {
         date: new Date()
     };
     posts.push(post);
-    res.send(post);
+    res.send(posts);
     }
 );
 
@@ -94,6 +92,7 @@ async function createUser(email, password) {
   const passwordHash = await bcrypt.hash(password, 10);
 
   const user = {
+    id: uuid.v4(),
     email: email,
     password: passwordHash,
     token: uuid.v4(),
@@ -117,6 +116,14 @@ function setAuthCookie(res, authToken) {
     sameSite: 'strict',
   });
 }
+
+// Serve up the front-end static content hosting
+app.use(express.static('public'));
+
+// IMPORTANT: This "catch-all" route MUST come after your API routes
+app.get('*', function(req, res) {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
