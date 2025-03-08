@@ -30,19 +30,40 @@ export function CampusBoard() {
   const [newPost, setNewPost] = useState(null);
   const [lastPostCount, setLastPostCount] = useState(0);
 
+  React.useEffect(() => {
+    fetch('/api/posts')
+      .then(response => response.json())
+      .then(data => {
+        setPosts(data);
+        setLastPostCount(data.length);
+      })
+      .catch(error => console.error('Error fetching posts:', error));
+  }, []);
+
+  React.useEffect(() => {
+    fetch('https://apinext.collegefootballdata.com/games/teams?year=2024&team=BYU&id=401677099', {
+      headers: {
+        "Authorization": "Bearer ffySbi+tmhEB5ZOijyaApsJ2pHnYewJ8jIExKuAzhH4seUfQsTVqrYinujMNO3dG"
+      }
+    }).then(response => response.json())
+      .then(data => {
+        const BYU = data[0].teams[0];
+        const away = data[0].teams[1];
+        const stats = {
+          awayName: away.team,
+          awayScore: away.points,
+          homeName: BYU.team,
+          homeScore: BYU.points,
+        };
+        setStats(stats);
+      })
+      .catch(error => console.error('Error fetching football stats:', error));
+
+  }, []);
+
+
   // Simulate data fetching when component mounts
   useEffect(() => {
-    // Get posts from localStorage or use mock data if empty
-    const storedPosts = JSON.parse(localStorage.getItem('campusPosts') || '[]');
-    const samplePosts = getPosts();
-    // combine storedPosts and samplePosts
-    const combinedPosts = [...storedPosts, ...samplePosts];
-    setPosts(combinedPosts);
-    setLastPostCount(combinedPosts.length);
-
-    // Fetch football stats
-    const fetchedStats = getFootballStats();
-    setStats(fetchedStats);
 
     // Setup WebSocket simulation
     const websocketSimulation = setInterval(() => {
@@ -64,7 +85,7 @@ export function CampusBoard() {
 
         // Update last post count
         setLastPostCount(prevPosts => prevPosts + 1);
-    }, 3000); // Check every 3 seconds
+    }, 10000); // Check every 3 seconds
 
     // Clean up on unmount
     return () => clearInterval(websocketSimulation);
@@ -142,13 +163,11 @@ export function CampusBoard() {
                 style={{ maxWidth: '150px' }}
               />
               <div id="footballStats" className="mt-3">
-                <h3 className="h6">Football Stats</h3>
+                <h3 className="h6">Most Recent Game</h3>
                 {stats ? (
                   <div className="mt-3">
-                    <p className="mb-1"><strong>Record:</strong> {stats.wins}-{stats.losses}</p>
-                    <p className="mb-1"><strong>Ranking:</strong> {stats.ranking}</p>
-                    <p className="mb-1"><strong>Next Game:</strong> {stats.nextGame}</p>
-                    <p className="mb-1"><strong>Date:</strong> {stats.gameDate}</p>
+                    <p className="mb-1"><strong>{stats.homeName} {stats.homeScore} - {stats.awayScore} {stats.awayName}</strong></p>
+
                   </div>
                 ) : (
                   <p className="text-muted">Loading stats...</p>
