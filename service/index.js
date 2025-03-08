@@ -8,7 +8,7 @@ const authCookieName = 'token';
 
 // The scores and users are saved in memory and disappear whenever the service is restarted.
 let users = [];
-let scores = [];
+let posts = [];
 
 // The service port. In production the front-end code is statically hosted by the service on the same port.
 const port = process.argv.length > 2 ? process.argv[2] : 3000;
@@ -72,7 +72,23 @@ const verifyAuth = async (req, res, next) => {
   }
 };
 
+apiRouter.get('/posts', verifyAuth, async (req, res) => {
+  res.send(posts);
+});
 
+apiRouter.post('/posts', verifyAuth, async (req, res) => {
+    const user = await findUser('token', req.cookies[authCookieName]);
+    const post = {
+        id: uuid.v4(),
+        userId: user.id,
+        title: req.body.title,
+        content: req.body.content,
+        date: new Date()
+    };
+    posts.push(post);
+    res.send(post);
+    }
+);
 
 async function createUser(email, password) {
   const passwordHash = await bcrypt.hash(password, 10);
