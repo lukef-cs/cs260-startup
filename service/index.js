@@ -60,6 +60,32 @@ apiRouter.delete('/auth/logout', async (req, res) => {
   res.status(204).end();
 });
 
+// Add this after your other auth endpoints but before the posts endpoints
+
+// Verify if a user is authenticated
+apiRouter.get('/auth/verify', async (req, res) => {
+    try {
+      const token = req.cookies[authCookieName];
+      if (!token) {
+        return res.status(401).json({ authenticated: false, msg: 'No token provided' });
+      }
+
+      const user = await findUser('token', token);
+      if (!user) {
+        return res.status(401).json({ authenticated: false, msg: 'Invalid token' });
+      }
+
+      // User is authenticated
+      return res.status(200).json({
+        authenticated: true,
+        email: user.email
+      });
+    } catch (error) {
+      console.error('Auth verification error:', error);
+      return res.status(500).json({ authenticated: false, msg: 'Server error' });
+    }
+  });
+
 // Middleware to verify that the user is authorized to call an endpoint
 const verifyAuth = async (req, res, next) => {
   const user = await findUser('token', req.cookies[authCookieName]);
@@ -69,6 +95,7 @@ const verifyAuth = async (req, res, next) => {
     res.status(401).send({ msg: 'Unauthorized' });
   }
 };
+
 
 apiRouter.get('/posts', verifyAuth, async (req, res) => {
   res.send(posts);
@@ -118,10 +145,11 @@ function setAuthCookie(res, authToken) {
 }
 
 // Serve up the front-end static content hosting
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // IMPORTANT: This "catch-all" route MUST come after your API routes
 app.get('*', function(req, res) {
+  // Make sure to use the absolute path to index.html
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 

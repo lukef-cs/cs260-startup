@@ -4,6 +4,7 @@ node_modules
 .vscode
 *.code-workspace
 *.sublime-workspace
+dbConfig.json
 
 # Logs
 logs
