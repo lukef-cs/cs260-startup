@@ -104,10 +104,6 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-## 🚀 Service deliverable
-
-For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
-
 - [x] **Node.js/Express HTTP service** - I created a backend service using Node.js and Express to handle API requests. The service manages post data, user interactions, and authentication processes.
 - [x] **Static middleware for frontend** - I implemented Express static middleware to serve the React frontend, allowing for seamless integration between the frontend and backend components.
 - [x] **Calls to third party endpoints** - The application makes calls to CollegeFootballData.com API to fetch information about the football team of the user's selected college, providing additional contextual information.
@@ -118,11 +114,11 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **User registration** - I did not complete this part of the deliverable.
-- [ ] **User login and logout** - I did not complete this part of the deliverable.
-- [ ] **Stores data in MongoDB** - I did not complete this part of the deliverable.
-- [ ] **Stores credentials in MongoDB** - I did not complete this part of the deliverable.
-- [ ] **Restricts functionality based on authentication** - I did not complete this part of the deliverable.
+- [x] **User registration** - I implemented user registration integrating MongoDB.
+- [x] **User login and logout** - I created a secure authentication flow with login and logout functionality. The system maintains user sessions and properly handles authentication state.
+- [x] **Stores data in MongoDB** - All user posts, comments, and votes are now stored in MongoDB collections, allowing for persistent data storage and efficient querying.
+- [x] **Stores credentials in MongoDB** - User credentials are securely stored in MongoDB with passwords properly hashed and salted to ensure security best practices.
+- [x] **Restricts functionality based on authentication** - Only authenticated users are able to view and make posts.
 
 ## 🚀 WebSocket deliverable
 
