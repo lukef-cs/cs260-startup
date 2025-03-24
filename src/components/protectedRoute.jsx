@@ -16,7 +16,9 @@ export function ProtectedRoute({ children }) {
 
         if (response.ok) {
           const data = await response.json();
-          setIsAuthenticated(data.authenticated);
+          // The API returns { email: user.email }, not { authenticated: true }
+          // If we get a successful response, user is authenticated
+          setIsAuthenticated(true);
         } else {
           setIsAuthenticated(false);
         }
