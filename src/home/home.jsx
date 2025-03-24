@@ -64,7 +64,7 @@ export function Home() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ email, password, name }),
           credentials: 'include', // Add this to ensure cookies are sent
         });
       }
@@ -76,7 +76,8 @@ export function Home() {
 
       const user = await response.json();
 
-      // Store user email in localStorage for UI purposes
+      // We no longer need to store in localStorage since we're using cookies
+      // But we'll keep the email for UI purposes
       localStorage.setItem('userEmail', user.email);
 
       // Update authentication state
