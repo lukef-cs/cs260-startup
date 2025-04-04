@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const config = require('./dbConfig.json');
 
 const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
@@ -60,8 +60,43 @@ async function getUserPosts(email, limit = 20) {
   return cursor.toArray();
 }
 
+// Add a comment to a post
+async function addComment(postId, comment) {
+  try {
+    const result = await postsCollection.findOneAndUpdate(
+      { _id: new ObjectId(postId) },
+      { $push: { comments: comment } },
+      { returnDocument: 'after' }
+    );
+    return result;
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    return null;
+  }
+}
+
+// Update votes (likes) for a post
+async function updateVote(postId, increment) {
+  try {
+    const result = await postsCollection.findOneAndUpdate(
+      { _id: new ObjectId(postId) },
+      { $inc: { likes: increment } },
+      { returnDocument: 'after' }
+    );
+    return result;
+  } catch (error) {
+    console.error('Error updating votes:', error);
+    return null;
+  }
+}
+
 async function deletePost(postId) {
-  return postsCollection.deleteOne({ _id: postId });
+  try {
+    return postsCollection.deleteOne({ _id: new ObjectId(postId) });
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    return null;
+  }
 }
 
 module.exports = {
@@ -72,5 +107,7 @@ module.exports = {
   addPost,
   getPosts,
   getUserPosts,
-  deletePost
+  deletePost,
+  addComment,
+  updateVote
 };

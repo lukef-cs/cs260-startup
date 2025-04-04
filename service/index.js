@@ -3,8 +3,10 @@ const bcrypt = require('bcryptjs');
 const express = require('express');
 const uuid = require('uuid');
 const path = require('path');
+const http = require('http');
 const app = express();
 const DB = require('./database.js');
+const { setupWebSocketServer, sendToAll } = require('./webSocketServer.js');
 
 const authCookieName = 'token';
 
@@ -50,13 +52,28 @@ apiRouter.post('/auth/login', async (req, res) => {
   res.status(401).send({ msg: 'Unauthorized' });
 });
 
-// Verify if user is authenticated
 apiRouter.get('/auth/verify', async (req, res) => {
-  const user = await DB.getUserByToken(req.cookies[authCookieName]);
-  if (user) {
-    res.send({ email: user.email });
-  } else {
-    res.status(401).send({ msg: 'Unauthorized' });
+  try {
+    const token = req.cookies[authCookieName];
+    console.log('Verifying auth with token:', token);
+
+    if (!token) {
+      console.log('No token provided');
+      return res.status(401).send({ msg: 'Authentication required' });
+    }
+
+    const user = await DB.getUserByToken(token);
+
+    if (user && user.token && user.token === token) {
+      console.log('User authenticated:', user.email);
+      res.send({ email: user.email });
+    } else {
+      console.log('Invalid token or token mismatch');
+      res.status(401).send({ msg: 'Unauthorized - Invalid token' });
+    }
+  } catch (error) {
+    console.error('Verification error:', error);
+    res.status(500).send({ msg: 'Authentication error' });
   }
 });
 
@@ -110,8 +127,77 @@ apiRouter.post('/posts', verifyAuth, async (req, res) => {
     comments: []
   };
 
-  await DB.addPost(post);
+  const result = await DB.addPost(post);
+  post._id = result.insertedId;
+
+  // Notify all clients about the new post
+  sendToAll({
+    type: 'new-post',
+    post: {
+      ...post,
+      authorEmail: user.email.split('@')[0] // Only send username part for privacy
+    }
+  });
+
   res.send(post);
+});
+
+// Add comment to a post
+apiRouter.post('/posts/:id/comments', verifyAuth, async (req, res) => {
+  const user = await DB.getUserByToken(req.cookies[authCookieName]);
+  if (!user) {
+    res.status(401).send({ msg: 'Unauthorized' });
+    return;
+  }
+
+  const comment = {
+    id: uuid.v4(),
+    authorEmail: user.email,
+    content: req.body.content,
+    date: new Date()
+  };
+
+  const post = await DB.addComment(req.params.id, comment);
+
+  if (post) {
+    // Notify all clients about the new comment
+    sendToAll({
+      type: 'new-comment',
+      postId: req.params.id,
+      comment: {
+        ...comment,
+        authorEmail: user.email.split('@')[0] // Only send username part for privacy
+      }
+    });
+
+    res.send(comment);
+  } else {
+    res.status(404).send({ msg: 'Post not found' });
+  }
+});
+
+// Update post votes/likes
+apiRouter.put('/posts/:id/vote', verifyAuth, async (req, res) => {
+  const user = await DB.getUserByToken(req.cookies[authCookieName]);
+  if (!user) {
+    res.status(401).send({ msg: 'Unauthorized' });
+    return;
+  }
+
+  const post = await DB.updateVote(req.params.id, req.body.increment);
+
+  if (post) {
+    // Notify all clients about the vote update
+    sendToAll({
+      type: 'vote-update',
+      postId: req.params.id,
+      likes: post.likes
+    });
+
+    res.send({ likes: post.likes });
+  } else {
+    res.status(404).send({ msg: 'Post not found' });
+  }
 });
 
 // Delete post
@@ -120,6 +206,13 @@ apiRouter.delete('/posts/:id', verifyAuth, async (req, res) => {
   // Implement authorization check if needed
 
   await DB.deletePost(req.params.id);
+
+  // Notify all clients about the deleted post
+  sendToAll({
+    type: 'delete-post',
+    postId: req.params.id
+  });
+
   res.status(204).end();
 });
 
@@ -154,6 +247,10 @@ function setAuthCookie(res, authToken) {
   });
 }
 
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+// Create HTTP server and setup WebSockets
+const server = http.createServer(app);
+setupWebSocketServer(server);
+
+server.listen(port, () => {
+  console.log(`Listening on port ${port} with WebSocket support`);
 });
