@@ -1,12 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { NavBar } from './components/navBar';
 import { Home } from './home/home';
 import { CampusBoard } from './campus-board/campusBoard';
 import { MakePost } from './make-post/makePost';
 import { ProtectedRoute } from './components/protectedRoute';
+import webSocketService from './websocketService';
+
+// Import Bootstrap CSS
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './app.css';
 
 export default function App() {
+  // Initialize WebSocket connection when app starts
+  useEffect(() => {
+    webSocketService.connect();
+
+    // Clean up connection when app unmounts
+    return () => {
+      webSocketService.disconnect();
+    };
+  }, []);
+
   return (
     <BrowserRouter>
         <div className="d-flex flex-column vh-100">

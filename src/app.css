@@ -1,5 +1,5 @@
 /* General styles */
-.body {
+body {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     display: flex;
     flex-direction: column;
