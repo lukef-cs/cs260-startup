@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { WebSocketContext } from '../app';
 
 export function MakePost() {
   const [title, setTitle] = useState('');
@@ -7,6 +8,9 @@ export function MakePost() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  // Get WebSocket context
+  const wsService = useContext(WebSocketContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,6 +32,17 @@ export function MakePost() {
 
       if (!response.ok) {
         throw new Error('Failed to create post');
+      }
+
+      const newPost = await response.json();
+
+      // If WebSocket isn't working, we won't get real-time updates
+      // This sends a manual update through WebSocket to ensure real-time notification
+      if (wsService && wsService.connected) {
+        wsService.sendMessage({
+          type: 'postUpdate',
+          post: newPost
+        });
       }
 
       // Clear form fields
@@ -96,11 +111,14 @@ export function MakePost() {
                     {isSubmitting ? 'Creating...' : 'Create Post'}
                   </button>
                 </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-  );
-}
+
+                {/* WebSocket status indicator */}
+                <div className="mt-3 text-center">
+                  <small className="text-muted">
+                    {wsService?.connected ? (
+                      <span className="text-success">
+                        <i className="bi bi-lightning-charge-fill me-1"></i>
+                        Your post will be delivered in real-time
+                      </span>
+                    ) : (
+                      <span className="text-secondary">

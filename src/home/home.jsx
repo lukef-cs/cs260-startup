@@ -23,6 +23,7 @@ export function Home() {
 
         if (response.ok) {
           const data = await response.json();
+          console.log(data)
           setIsAuthenticated(true);
           setUserEmail(data.email);
         } else {

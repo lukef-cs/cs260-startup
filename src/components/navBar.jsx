@@ -35,24 +35,34 @@ export function NavBar() {
   // Handle logout
   const handleLogout = async () => {
     try {
+      console.log('Attempting to log out...');
       const response = await fetch('/api/auth/logout', {
         method: 'DELETE',
         credentials: 'include',
+        headers: {
+          'Cache-Control': 'no-cache',
+        },
       });
 
+      console.log('Logout response:', response.status);
+
       if (response.ok) {
-        // Clear any local storage items
+        // Force clear any local storage items
         localStorage.removeItem('userEmail');
 
         // Update auth state
         setIsAuthenticated(false);
         setUserEmail('');
 
-        // Redirect to home
-        navigate('/');
+        // Force reload to clear any client-side state
+        window.location.href = '/';
+      } else {
+        console.error('Logout failed:', await response.text());
+        alert('Logout failed. Please try again.');
       }
     } catch (error) {
       console.error('Logout error:', error);
+      alert('Logout error occurred. Please try again.');
     }
   };
 

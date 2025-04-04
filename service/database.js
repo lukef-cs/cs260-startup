@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const config = require('./dbConfig.json');
 
 const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
@@ -61,7 +61,12 @@ async function getUserPosts(email, limit = 20) {
 }
 
 async function deletePost(postId) {
-  return postsCollection.deleteOne({ _id: postId });
+  try {
+    return postsCollection.deleteOne({ _id: new ObjectId(postId) });
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    throw error;
+  }
 }
 
 module.exports = {
