@@ -184,7 +184,7 @@ export function CampusBoard() {
             </Card.Header>
             <Card.Body className="text-center">
               <img
-                src="/public/byu.png"
+                src="/byu.png"
                 alt="BYU Logo"
                 className="img-fluid mb-3"
                 style={{ maxWidth: '200px' }}
